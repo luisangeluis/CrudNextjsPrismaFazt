@@ -7,14 +7,26 @@ export const GET = async (req, { params }) => {
   return NextResponse.json({ response });
 };
 
-export const PUT = (req, { params }) => {
-  const id = params.id;
-  return NextResponse.json({ response: `Updated task: ${id}` });
+export const PUT = async (req, { params }) => {
+  try {
+    const id = Number(params.id);
+    const data = await req.json();
+    const response = await prisma.task.update({ where: { id }, data });
+
+    return NextResponse.json({ response: `Updated task: ${id}` });
+  } catch (error) {
+    return NextResponse.json({ error: error.message });
+  }
 };
 
 export const DELETE = async (req, { params }) => {
-  const id = Number(params.id);
-  const response = await prisma.task.delete({ where: { id } });
-  console.log(response);
-  return NextResponse.json({ response: `Deleted task: ${id}` });
+  try {
+    const id = Number(params.id);
+    const response = await prisma.task.delete({ where: { id } });
+
+    console.log({ response });
+    return NextResponse.json({ response: `Deleted task: ${id}` });
+  } catch (error) {
+    return NextResponse.json({ error: error.message });
+  }
 };
