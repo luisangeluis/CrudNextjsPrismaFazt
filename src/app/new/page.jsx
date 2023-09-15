@@ -1,34 +1,69 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const NewPage = () => {
+const NewPage = ({ params }) => {
+  console.log(params);
   const [dataForm, setDataForm] = useState({ title: "", description: "" });
   const router = useRouter();
 
-  const handlerSubmit =async (e) => {
+  useEffect(() => {
+    if (params.id) {
+      getTask()
+        .then(res=>res.json())
+        .then((res) => {
+          setDataForm({ title: res.title, description: res.description });
+        })
+        .catch((error) => console.log(error));
+    }
+  }, []);
+
+  const getTask = async () => {
+    const res = await fetch(`/api/tasks/${params.id}`);
+
+    return data;
+  };
+
+  const updateTask = async () => {
+    const res = await fetch(`/api/task`);
+  };
+
+  const handlerSubmit = async (e) => {
     e.preventDefault();
     // console.log(dataForm);
+    let res = "";
+    let data = {};
 
-    const res = await fetch("/api/tasks",{
-      method:"POST",
-      body: JSON.stringify(dataForm),
-      headers:{
-        "Content-Type":"application/json"
-      }
-    })
+    if (params.id) {
+      res = await fetch(`/api/tasks/${params.id}`, {
+        method: "PUT",
+        body: JSON.stringify(dataForm),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } else {
+      res = await fetch("/api/tasks/", {
+        method: "POST",
+        body: JSON.stringify(dataForm),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+    data = await res.json();
 
-    const data = await res.json();
     // console.log(data);
     router.push("/");
   };
 
-  const handleChange=(e)=>{
+  const handleChange = (e) => {
     // console.log(e);
-    const key = e.target.id
-    setDataForm({...dataForm,[key]:e.target.value})
-  }
+    const key = e.target.id;
+    setDataForm({ ...dataForm, [key]: e.target.value });
+  };
+
   return (
     <section className="h-screen flex justify-center items-center p-10">
       <form

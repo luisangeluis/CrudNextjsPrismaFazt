@@ -4,12 +4,12 @@ import { Container } from "postcss";
 const getTasks = async () => {
   const res = await fetch("http://localhost:3000/api/tasks");
   const data = await res.json();
+  console.log(data);
   return data;
 };
 
 const HomePage = async () => {
   const tasks = await getTasks();
-  // console.log(tasks);
 
   return (
     <section className="container mx-auto">
