@@ -1,10 +1,9 @@
 import TaskCard from "@/components/TaskCard";
-import { Container } from "postcss";
 
 const getTasks = async () => {
-  const res = await fetch("http://localhost:3000/api/tasks");
+  const res = await fetch("http://localhost:3000/api/tasks", { cache: 'no-store' });
   const data = await res.json();
-  console.log(data);
+  // console.log(data);
   return data;
 };
 

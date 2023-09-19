@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 export const GET = async (req, { params }) => {
   const id = Number(params.id);
   const response = await prisma.task.findUnique({ where: { id } });
+  console.log({response});
   return NextResponse.json({ response });
 };
 
